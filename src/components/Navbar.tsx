@@ -1,0 +1,121 @@
+import { useState } from "react";
+import logo from "../assets/a-logo.png";
+import { ShoppingCart, Menu, X, ChevronDown } from "lucide-react";
+
+export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [active, setActive] = useState("WOMEN");
+  const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
+
+  const navItems = ["WOMEN", "MEN", "KIDS"];
+  const currencies = ["USD ($)", "EUR (€)", "GBP (£)"];
+
+  return (
+    <nav className="w-full bg-white shadow-md p-4 relative">
+      <div className="container mx-auto flex justify-between items-center">
+        {/* Mobile menu button */}
+        <div className="md:hidden">
+          <button onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
+        </div>
+
+        {/* Navigation items */}
+        <div className="hidden md:flex flex-col relative">
+          <div className="flex space-x-8 text-sm font-semibold tracking-wide uppercase relative">
+            {navItems.map((item) => (
+              <div
+                key={item}
+                onClick={() => setActive(item)}
+                className={`cursor-pointer pb-1 ${
+                  active === item
+                    ? "text-green-600"
+                    : "text-gray-700 hover:text-green-600"
+                }`}
+              >
+                {item}
+              </div>
+            ))}
+          </div>
+
+          {/* Animated green underline */}
+          <div className="absolute bottom-0 left-0 w-full h-0.5 bg-transparent">
+            <div
+              className={`h-0.5 bg-green-600 transition-all duration-300 ease-in-out`}
+              style={{
+                width: `${100 / navItems.length}%`,
+                transform: `translateX(${
+                  navItems.indexOf(active) * (100 / navItems.length)
+                }%)`,
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Logo */}
+        <div className="flex-1 flex justify-center">
+          <img src={logo} alt="Logo" className="h-10 w-auto" />
+        </div>
+
+        {/* Currency dropdown and Cart */}
+        <div className="flex items-center space-x-4 relative">
+          {/* Currency dropdown */}
+          <div
+            className="relative cursor-pointer"
+            onClick={() => setIsCurrencyOpen(!isCurrencyOpen)}
+          >
+            <div className="flex items-center space-x-1 font-bold text-lg">
+              <span>$</span>
+              <ChevronDown size={18} />
+            </div>
+
+            {isCurrencyOpen && (
+              <div className="absolute right-0 mt-2 bg-white border border-gray-200 rounded shadow-lg w-28 text-sm z-20">
+                {currencies.map((cur) => (
+                  <div
+                    key={cur}
+                    onClick={() => setIsCurrencyOpen(false)}
+                    className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                  >
+                    {cur}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Cart Icon */}
+          <div className="relative cursor-pointer">
+            <ShoppingCart size={26} className="text-gray-800" />
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              3
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* MOBILE MENU */}
+      {isOpen && (
+        <div className="md:hidden mt-4 flex flex-col items-center space-y-3">
+          {navItems.map((item) => (
+            <div
+              key={item}
+              onClick={() => {
+                setActive(item);
+                setIsOpen(false);
+              }}
+              className={`uppercase font-semibold cursor-pointer transition-colors ${
+                active === item
+                  ? "text-green-600"
+                  : "text-gray-700 hover:text-green-600"
+              }`}
+            >
+              {item}
+            </div>
+          ))}
+          <div className="h-0.5 w-3/4 bg-green-600 mt-2" />
+        </div>
+      )}
+    </nav>
+  );
+}
