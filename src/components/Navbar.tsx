@@ -6,12 +6,13 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [active, setActive] = useState("WOMEN");
   const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
+  const [currency, setCurrency] = useState({ code: "USD", symbol: "$" });
   const [underlineStyle, setUnderlineStyle] = useState({ left: 0, width: 0 });
 
   const navRefs = useRef<(HTMLDivElement | null)[]>([]);
   const navItems = ["WOMEN", "MEN", "KIDS"];
-  const currencies = ["USD ($)", "EUR (€)", "GBP (£)"];
 
+  // Adjust underline position when the active nav item changes (desktop only)
   useEffect(() => {
     if (window.innerWidth < 768) return; // skip underline on mobile
     const activeIndex = navItems.indexOf(active);
@@ -27,14 +28,14 @@ export default function Navbar() {
   return (
     <nav className="w-full bg-white shadow-md p-4 relative">
       <div className="container mx-auto flex justify-between items-center">
-        {/* Mobile menu button */}
+        {/* Mobile Menu Button */}
         <div className="md:hidden">
           <button onClick={() => setIsOpen(!isOpen)}>
             {isOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
 
-        {/* Navigation items */}
+        {/* Desktop Navigation Items */}
         <div className="hidden md:flex flex-col relative">
           <div className="flex space-x-8 text-sm font-semibold tracking-wide uppercase relative">
             {navItems.map((item, index) => (
@@ -53,7 +54,7 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Animated underline for desktop only */}
+          {/* Animated underline for active nav item */}
           <div
             className="absolute bottom-0 left-0 h-0.5 bg-green-600 transition-all duration-300 ease-in-out"
             style={{
@@ -63,12 +64,12 @@ export default function Navbar() {
           ></div>
         </div>
 
-        {/* Logo */}
+        {/* Center Logo */}
         <div className="flex-1 flex justify-center">
           <img src={logo} alt="Logo" className="h-10 w-auto" />
         </div>
 
-        {/* Currency dropdown + Cart */}
+        {/* Currency Dropdown + Cart */}
         <div className="flex items-center space-x-4 relative">
           {/* Currency dropdown */}
           <div
@@ -76,19 +77,26 @@ export default function Navbar() {
             onClick={() => setIsCurrencyOpen(!isCurrencyOpen)}
           >
             <div className="flex items-center space-x-1 font-bold text-lg">
-              <span>$</span>
+              <span>{currency.symbol}</span>
               <ChevronDown size={18} />
             </div>
 
             {isCurrencyOpen && (
               <div className="absolute right-0 mt-2 bg-white border border-gray-200 rounded shadow-lg w-28 text-sm z-20">
-                {currencies.map((cur) => (
+                {[
+                  { code: "USD", symbol: "$" },
+                  { code: "EUR", symbol: "€" },
+                  { code: "GBP", symbol: "£" },
+                ].map((cur) => (
                   <div
-                    key={cur}
-                    onClick={() => setIsCurrencyOpen(false)}
+                    key={cur.code}
+                    onClick={() => {
+                      setCurrency(cur);
+                      setIsCurrencyOpen(false);
+                    }}
                     className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
                   >
-                    {cur}
+                    {cur.code} ({cur.symbol})
                   </div>
                 ))}
               </div>
@@ -105,7 +113,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* MOBILE MENU (visible when open) */}
+      {/* Mobile Navigation Menu */}
       {isOpen && (
         <div className="md:hidden mt-4 flex flex-col items-center space-y-3">
           {navItems.map((item) => (
