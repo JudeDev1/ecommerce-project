@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import logo from "../assets/a-logo.png";
 import { ShoppingCart, Menu, X, ChevronDown } from "lucide-react";
 
@@ -6,9 +6,23 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [active, setActive] = useState("WOMEN");
   const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
+  const [underlineStyle, setUnderlineStyle] = useState({ left: 0, width: 0 });
 
+  const navRefs = useRef<(HTMLDivElement | null)[]>([]);
   const navItems = ["WOMEN", "MEN", "KIDS"];
   const currencies = ["USD ($)", "EUR (€)", "GBP (£)"];
+
+  useEffect(() => {
+    if (window.innerWidth < 768) return; // skip underline on mobile
+    const activeIndex = navItems.indexOf(active);
+    const activeEl = navRefs.current[activeIndex];
+    if (activeEl) {
+      setUnderlineStyle({
+        left: activeEl.offsetLeft,
+        width: activeEl.offsetWidth,
+      });
+    }
+  }, [active]);
 
   return (
     <nav className="w-full bg-white shadow-md p-4 relative">
@@ -23,9 +37,10 @@ export default function Navbar() {
         {/* Navigation items */}
         <div className="hidden md:flex flex-col relative">
           <div className="flex space-x-8 text-sm font-semibold tracking-wide uppercase relative">
-            {navItems.map((item) => (
+            {navItems.map((item, index) => (
               <div
                 key={item}
+                ref={(el) => (navRefs.current[index] = el)}
                 onClick={() => setActive(item)}
                 className={`cursor-pointer pb-1 ${
                   active === item
@@ -38,18 +53,14 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Animated green underline */}
-          <div className="absolute bottom-0 left-0 w-full h-0.5 bg-transparent">
-            <div
-              className={`h-0.5 bg-green-600 transition-all duration-300 ease-in-out`}
-              style={{
-                width: `${100 / navItems.length}%`,
-                transform: `translateX(${
-                  navItems.indexOf(active) * (100 / navItems.length)
-                }%)`,
-              }}
-            />
-          </div>
+          {/* Animated underline for desktop only */}
+          <div
+            className="absolute bottom-0 left-0 h-0.5 bg-green-600 transition-all duration-300 ease-in-out"
+            style={{
+              width: `${underlineStyle.width}px`,
+              transform: `translateX(${underlineStyle.left}px)`,
+            }}
+          ></div>
         </div>
 
         {/* Logo */}
@@ -57,7 +68,7 @@ export default function Navbar() {
           <img src={logo} alt="Logo" className="h-10 w-auto" />
         </div>
 
-        {/* Currency dropdown and Cart */}
+        {/* Currency dropdown + Cart */}
         <div className="flex items-center space-x-4 relative">
           {/* Currency dropdown */}
           <div
@@ -94,7 +105,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* MOBILE MENU */}
+      {/* MOBILE MENU (visible when open) */}
       {isOpen && (
         <div className="md:hidden mt-4 flex flex-col items-center space-y-3">
           {navItems.map((item) => (
@@ -113,7 +124,6 @@ export default function Navbar() {
               {item}
             </div>
           ))}
-          <div className="h-0.5 w-3/4 bg-green-600 mt-2" />
         </div>
       )}
     </nav>
