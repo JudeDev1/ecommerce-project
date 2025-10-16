@@ -39,16 +39,16 @@ export default function Navbar() {
         <div className="hidden md:flex flex-col relative">
           <div className="flex space-x-8 text-sm font-semibold tracking-wide uppercase relative">
             {navItems.map((item, index) => (
-              <div
-                key={item}
-                ref={(el) => (navRefs.current[index] = el)}
-                onClick={() => setActive(item)}
-                className={`cursor-pointer pb-1 ${
-                  active === item
-                    ? "text-green-600"
-                    : "text-gray-700 hover:text-green-600"
-                }`}
-              >
+                <div
+                    key={item}
+                    ref={(el) => (navRefs.current[index] = el)}
+                    onClick={() => setActive(item)}
+                    className={`cursor-pointer pb-1 ${
+                    active === item
+                        ? "text-green-600"
+                        : "text-gray-700 hover:text-green-600"
+                    }`}
+                >
                 {item}
               </div>
             ))}
