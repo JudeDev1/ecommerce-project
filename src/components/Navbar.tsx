@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import logo from "../assets/a-logo.png";
 import { ShoppingCart, Menu, X, ChevronDown } from "lucide-react";
+import { useProduct } from "../context/ProductContext";
 
 export default function Navbar() {
+  const { activeCategory, setActiveCategory } = useProduct(); // connected to context
   const [isOpen, setIsOpen] = useState(false);
-  const [active, setActive] = useState("WOMEN");
   const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
   const [currency, setCurrency] = useState({ code: "USD", symbol: "$" });
   const [underlineStyle, setUnderlineStyle] = useState({ left: 0, width: 0 });
@@ -15,7 +16,7 @@ export default function Navbar() {
   // Adjust underline position when the active nav item changes (desktop only)
   useEffect(() => {
     if (window.innerWidth < 768) return; // skip underline on mobile
-    const activeIndex = navItems.indexOf(active);
+    const activeIndex = navItems.indexOf(activeCategory);
     const activeEl = navRefs.current[activeIndex];
     if (activeEl) {
       setUnderlineStyle({
@@ -23,7 +24,7 @@ export default function Navbar() {
         width: activeEl.offsetWidth,
       });
     }
-  }, [active]);
+  }, [activeCategory]);
 
   return (
     <nav className="w-full bg-white shadow-md p-4 relative">
@@ -39,16 +40,16 @@ export default function Navbar() {
         <div className="hidden md:flex flex-col relative">
           <div className="flex space-x-8 text-sm font-semibold tracking-wide uppercase relative">
             {navItems.map((item, index) => (
-                <div
-                    key={item}
-                    ref={(el) => (navRefs.current[index] = el)}
-                    onClick={() => setActive(item)}
-                    className={`cursor-pointer pb-1 ${
-                    active === item
-                        ? "text-green-600"
-                        : "text-gray-700 hover:text-green-600"
-                    }`}
-                >
+              <div
+                key={item}
+                ref={(el) => (navRefs.current[index] = el)}
+                onClick={() => setActiveCategory(item)} // ✅ use context updater
+                className={`cursor-pointer pb-1 ${
+                  activeCategory === item
+                    ? "text-green-600"
+                    : "text-gray-700 hover:text-green-600"
+                }`}
+              >
                 {item}
               </div>
             ))}
@@ -120,11 +121,11 @@ export default function Navbar() {
             <div
               key={item}
               onClick={() => {
-                setActive(item);
+                setActiveCategory(item); // ✅ update context
                 setIsOpen(false);
               }}
               className={`uppercase font-semibold cursor-pointer transition-colors ${
-                active === item
+                activeCategory === item
                   ? "text-green-600"
                   : "text-gray-700 hover:text-green-600"
               }`}
