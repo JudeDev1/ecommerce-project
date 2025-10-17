@@ -1,3 +1,4 @@
+// Test commit — verifying GitHub push works
 import { useState, useRef, useEffect } from "react";
 import logo from "../assets/a-logo.png";
 import { ShoppingCart, Menu, X, ChevronDown } from "lucide-react";
@@ -43,7 +44,7 @@ export default function Navbar() {
               <div
                 key={item}
                 ref={(el) => (navRefs.current[index] = el)}
-                onClick={() => setActiveCategory(item)} // ✅ use context updater
+                onClick={() => setActiveCategory(item)} // 
                 className={`cursor-pointer pb-1 ${
                   activeCategory === item
                     ? "text-green-600"
