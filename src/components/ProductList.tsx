@@ -21,9 +21,6 @@ import kid5 from "../assets/kids5.jpg";
 import kid6 from "../assets/kids6.jpg";
 //
 
-
-
-
 export const products = {
   WOMEN: [
     { id: 1, name: "Apollo Running Short", price: 50.0, image: woman1 },
