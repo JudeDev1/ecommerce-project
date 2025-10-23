@@ -1,18 +1,20 @@
+// src/components/ProductList.tsx
 import { useProduct } from "../context/ProductContext";
+/* Women Section */
 import woman1 from "../assets/ars1.png";
 import woman2 from "../assets/ars2.png";
 import woman3 from "../assets/ars3.png";
 import woman4 from "../assets/ars4.png";
 import woman5 from "../assets/ars5.png";
 import woman6 from "../assets/ars6.png";
-
+/* Men Section */
 import man1 from "../assets/mrn1.jpg";
 import man2 from "../assets/mrn2.jpg";
 import man3 from "../assets/mrn3.jpg";
 import man4 from "../assets/mrn4.jpg";
 import man5 from "../assets/mrn5.jpg";
 import man6 from "../assets/mrn6.jpg";
-
+/* Kids Section */
 import kid1 from "../assets/kid1.jpg";
 import kid2 from "../assets/kids2.jpg";
 import kid3 from "../assets/kids3.jpg";
@@ -52,28 +54,36 @@ export default function ProductList() {
   const items = products[activeCategory] || [];
 
   return (
-    <section className="p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-      {items.length > 0 ? (
-        items.map((product) => (
-          <div
-            key={product.id}
-            className="rounded-lg shadow hover:shadow-lg transition p-4 bg-white cursor-pointer"
-            onClick={() => setSelectedProduct(product)}
-          >
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-full h-64 object-cover rounded"
-            />
-            <h3 className="mt-3 text-lg font-light">{product.name}</h3>
-            <p className="font-medium mt-1">${product.price.toFixed(2)}</p>
-          </div>
-        ))
-      ) : (
-        <p className="col-span-full text-center text-gray-500">
-          No products available.
-        </p>
-      )}
+    <section className="p-8">
+      {/* Static Category Label */}
+      <h1 className="text-3xl font-light capitalize mb-8 text-gray-800">
+        Category name
+      </h1>
+
+      {/* Products Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {items.length > 0 ? (
+          items.map((product) => (
+            <div
+              key={product.id}
+              className="rounded-lg shadow hover:shadow-lg transition p-4 bg-white cursor-pointer"
+              onClick={() => setSelectedProduct(product)}
+            >
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-full h-64 object-cover rounded"
+              />
+              <h3 className="mt-3 text-lg font-light">{product.name}</h3>
+              <p className="font-medium mt-1">${product.price.toFixed(2)}</p>
+            </div>
+          ))
+        ) : (
+          <p className="col-span-full text-center text-gray-500">
+            No products available.
+          </p>
+        )}
+      </div>
     </section>
   );
 }

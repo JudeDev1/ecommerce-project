@@ -1,7 +1,17 @@
+// src/components/ProductDetail.tsx
 import { useState } from "react";
-import woman1 from "../assets/ars1.png"; // example image
+import woman1 from "../assets/ars1.png";
+import { useCart } from "../context/CartContext";
+import { useProduct } from "../context/ProductContext"; // 
 
-export default function PDP() {
+interface ProductDetailProps {
+  onGoToCart: () => void;
+}
+
+export default function ProductDetail({ onGoToCart }: ProductDetailProps) {
+  const { addToCart } = useCart();
+  const { setSelectedProduct } = useProduct(); // 
+
   const [selectedSize, setSelectedSize] = useState("M");
   const [selectedColor, setSelectedColor] = useState("Green");
 
@@ -12,9 +22,28 @@ export default function PDP() {
     { name: "Grey", code: "#4CAF50" },
   ];
 
+  const handleAddToCart = () => {
+    addToCart({
+      id: 1,
+      name: "Apollo Running Short",
+      price: 50,
+      image: woman1,
+      quantity: 1,
+    });
+    onGoToCart();
+  };
+
   return (
     <section className="p-8 flex flex-col md:flex-row items-start gap-12">
-      {/* LEFT SIDE - Product Image */}
+      {/* Go Back Button */}
+      <button
+        onClick={() => setSelectedProduct(null)} // 
+        className="mb-4 text-green-600 hover:underline"
+      >
+        ← Back
+      </button>
+
+      {/* Product Image */}
       <div className="w-full md:w-1/2 flex justify-center">
         <img
           src={woman1}
@@ -23,7 +52,7 @@ export default function PDP() {
         />
       </div>
 
-      {/* RIGHT SIDE - Product Details */}
+      {/* Product Details */}
       <div className="w-full md:w-1/2">
         <h1 className="text-2xl leading-tight">
           <span className="font-bold">Apollo</span><br />
@@ -65,32 +94,26 @@ export default function PDP() {
                 }`}
                 style={{
                   backgroundColor: color.code,
-                  borderRadius: "0.25rem", // square corners
+                  borderRadius: "0.25rem",
                 }}
               ></div>
             ))}
           </div>
-            {/*
-            <p className="text-sm mt-2 text-gray-600">
-              Selected: {selectedColor}
-            </p>
-            */}
         </div>
 
         <h3 className="font-semibold uppercase mb-2">Price:</h3>
         <p className="text-lg font-medium mb-6">$50.00</p>
 
-        {/* Add to Cart */}
-        <button className="bg-green-600 text-white px-8 py-3 rounded-md hover:bg-green-700 transition">
+        <button
+          onClick={handleAddToCart}
+          className="bg-green-600 text-white px-8 py-3 rounded-md hover:bg-green-700 transition"
+        >
           ADD TO CART
         </button>
 
-        {/* Description */}
         <p className="mt-8 text-gray-700 leading-relaxed">
-          Find stunning women's cocktail dresses
-          and party dresses. Stand out in lace and
-          metallic cocktail dresses and party 
-          dresses from all your favourite brands. 
+          Find stunning women's cocktail dresses and party dresses. Stand out in lace
+          and metallic cocktail dresses and party dresses from all your favourite brands.
         </p>
       </div>
     </section>

@@ -1,22 +1,25 @@
-// Test commit — verifying GitHub push works
+//src/components/Navbar.tsx
 import { useState, useRef, useEffect } from "react";
 import logo from "../assets/a-logo.png";
 import { ShoppingCart, Menu, X, ChevronDown } from "lucide-react";
 import { useProduct } from "../context/ProductContext";
+import CartOverlay from "./CartOverlay";
 
 export default function Navbar() {
-  const { activeCategory, setActiveCategory } = useProduct(); // connected to context
+  const { activeCategory, setActiveCategory } = useProduct();
   const [isOpen, setIsOpen] = useState(false);
   const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const [currency, setCurrency] = useState({ code: "USD", symbol: "$" });
   const [underlineStyle, setUnderlineStyle] = useState({ left: 0, width: 0 });
 
   const navRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const cartRef = useRef<HTMLDivElement | null>(null);
   const navItems = ["WOMEN", "MEN", "KIDS"];
 
-  // Adjust underline position when the active nav item changes (desktop only)
+  // 
   useEffect(() => {
-    if (window.innerWidth < 768) return; // skip underline on mobile
+    if (window.innerWidth < 768) return;
     const activeIndex = navItems.indexOf(activeCategory);
     const activeEl = navRefs.current[activeIndex];
     if (activeEl) {
@@ -27,8 +30,26 @@ export default function Navbar() {
     }
   }, [activeCategory]);
 
+  // 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (cartRef.current && !cartRef.current.contains(e.target as Node)) {
+        setIsCartOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // 
+  const handleViewBag = () => {
+    const event = new CustomEvent("openCartPage");
+    window.dispatchEvent(event);
+    setIsCartOpen(false);
+  };
+
   return (
-    <nav className="w-full bg-white shadow-md p-4 relative">
+    <nav className="w-full bg-white shadow-md p-4 relative z-40">
       <div className="container mx-auto flex justify-between items-center">
         {/* Mobile Menu Button */}
         <div className="md:hidden">
@@ -37,14 +58,14 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Desktop Navigation Items */}
+        {/* Desktop Nav */}
         <div className="hidden md:flex flex-col relative">
           <div className="flex space-x-8 text-sm font-semibold tracking-wide uppercase relative">
             {navItems.map((item, index) => (
               <div
                 key={item}
                 ref={(el) => (navRefs.current[index] = el)}
-                onClick={() => setActiveCategory(item)} // 
+                onClick={() => setActiveCategory(item)}
                 className={`cursor-pointer pb-1 ${
                   activeCategory === item
                     ? "text-green-600"
@@ -56,7 +77,7 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Animated underline for active nav item */}
+          {/* Animated underline */}
           <div
             className="absolute bottom-0 left-0 h-0.5 bg-green-600 transition-all duration-300 ease-in-out"
             style={{
@@ -71,7 +92,7 @@ export default function Navbar() {
           <img src={logo} alt="Logo" className="h-10 w-auto" />
         </div>
 
-        {/* Currency Dropdown + Cart */}
+        {/* Currency & Cart */}
         <div className="flex items-center space-x-4 relative">
           {/* Currency dropdown */}
           <div
@@ -84,45 +105,57 @@ export default function Navbar() {
             </div>
 
             {isCurrencyOpen && (
-              <div className="absolute right-0 mt-2 bg-white border border-gray-200 rounded shadow-lg w-28 text-sm z-20">
-                {[
-                  { code: "USD", symbol: "$" },
-                  { code: "EUR", symbol: "€" },
-                  { code: "GBP", symbol: "£" },
-                ].map((cur) => (
-                  <div
-                    key={cur.code}
-                    onClick={() => {
-                      setCurrency(cur);
-                      setIsCurrencyOpen(false);
-                    }}
-                    className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-                  >
-                    {cur.code} ({cur.symbol})
-                  </div>
-                ))}
+              <div className="absolute right-0 mt-2 bg-white border border-gray-200 rounded shadow-lg w-28 text-sm z-30">
+                {[{ code: "USD", symbol: "$" }, { code: "EUR", symbol: "€" }, { code: "GBP", symbol: "£" }].map(
+                  (cur) => (
+                    <div
+                      key={cur.code}
+                      onClick={() => {
+                        setCurrency(cur);
+                        setIsCurrencyOpen(false);
+                      }}
+                      className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                    >
+                      {cur.code} ({cur.symbol})
+                    </div>
+                  )
+                )}
               </div>
             )}
           </div>
 
-          {/* Cart Icon */}
-          <div className="relative cursor-pointer">
-            <ShoppingCart size={26} className="text-gray-800" />
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-              3
-            </span>
+          {/* Cart Icon + Overlay */}
+          <div className="relative" ref={cartRef}>
+            <button
+              onClick={() => setIsCartOpen(!isCartOpen)}
+              className="relative"
+            >
+              <ShoppingCart size={26} className="text-gray-800" />
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                3
+              </span>
+            </button>
+
+            {isCartOpen && (
+              <div className="absolute right-0">
+                <CartOverlay
+                  onClose={() => setIsCartOpen(false)}
+                  onViewBag={handleViewBag}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Mobile Navigation Menu */}
+      {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden mt-4 flex flex-col items-center space-y-3">
           {navItems.map((item) => (
             <div
               key={item}
               onClick={() => {
-                setActiveCategory(item); // ✅ update context
+                setActiveCategory(item);
                 setIsOpen(false);
               }}
               className={`uppercase font-semibold cursor-pointer transition-colors ${
