@@ -1,73 +1,58 @@
-# React + TypeScript + Vite
+# 🛍️ E-Commerce Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern e-commerce web application built for purchasing clothes online.  
+The app allows users to browse products by category (Women, Men and Kids), view product details, manage their cart, and switch currencies all within a clean, responsive interface.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🌐 Live Demo
+Coming soon...
 
-## React Compiler
+## 💻 Repository
+[GitHub Repository](https://github.com/JudeDev1/ecommerce-project)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## ✨ Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- 🧍 **Product Listing by Category** — Browse items under Women, Men and Kids.
+- 🛒 **Cart Functionality** — Add, view, and manage selected items in your shopping cart.
+- 💵 **Currency Switcher** — Seamlessly switch between currencies for price display.
+- 🧭 **Responsive Navbar** — Adaptive navigation bar with cart icon and dropdown for currencies.
+- 🧾 **Product Detail Page** — Displays detailed information for selected items.
+- 🧳 **Cart Overlay** — Quick cart preview accessible from navbar.
+- 📱 **Responsive Design** — Fully optimized for desktop and mobile screens.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🧱 Tech Stack
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+| Layer | Technology |
+|-------|-------------|
+| Frontend Framework | **React** |
+| Language | **TypeScript** |
+| Styling | **Tailwind CSS** |
+| Design Reference | **Figma Design (provided)** |
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## ⚙️ Installation & Setup
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 🧩 Prerequisites
+- Node.js ≥ 18  
+- npm ≥ 9  
+
+### 🚀 Steps
+
+```bash
+# Clone the repository
+git clone https://github.com/JudeDev1/ecommerce-project.git
+
+# Navigate to the project directory
+cd ecommerce-project
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
