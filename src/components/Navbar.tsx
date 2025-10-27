@@ -1,12 +1,15 @@
-//src/components/Navbar.tsx
+// src/components/Navbar.tsx
 import { useState, useRef, useEffect } from "react";
 import logo from "../assets/a-logo.png";
 import { ShoppingCart, Menu, X, ChevronDown } from "lucide-react";
 import { useProduct } from "../context/ProductContext";
+import { useCart } from "../context/CartContext";
 import CartOverlay from "./CartOverlay";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Navbar() {
   const { activeCategory, setActiveCategory } = useProduct();
+  const { items } = useCart();
   const [isOpen, setIsOpen] = useState(false);
   const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -15,22 +18,27 @@ export default function Navbar() {
 
   const navRefs = useRef<(HTMLDivElement | null)[]>([]);
   const cartRef = useRef<HTMLDivElement | null>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const navItems = ["WOMEN", "MEN", "KIDS"];
 
-  // 
+  // Handle active underline
   useEffect(() => {
     if (window.innerWidth < 768) return;
     const activeIndex = navItems.indexOf(activeCategory);
     const activeEl = navRefs.current[activeIndex];
-    if (activeEl) {
+    if (activeEl && location.pathname === "/") {
       setUnderlineStyle({
         left: activeEl.offsetLeft,
         width: activeEl.offsetWidth,
       });
+    } else {
+      setUnderlineStyle({ left: 0, width: 0 }); // hide underline when not on home
     }
-  }, [activeCategory]);
+  }, [activeCategory, location.pathname]);
 
-  // 
+  // Close cart overlay when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (cartRef.current && !cartRef.current.contains(e.target as Node)) {
@@ -41,10 +49,15 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // 
+  // Handle category navigation
+  const handleCategoryClick = (category: string) => {
+    setActiveCategory(category);
+    navigate("/"); // go back to home so products show
+  };
+
+  // Handle View Bag
   const handleViewBag = () => {
-    const event = new CustomEvent("openCartPage");
-    window.dispatchEvent(event);
+    navigate("/cart");
     setIsCartOpen(false);
   };
 
@@ -65,9 +78,9 @@ export default function Navbar() {
               <div
                 key={item}
                 ref={(el) => (navRefs.current[index] = el)}
-                onClick={() => setActiveCategory(item)}
+                onClick={() => handleCategoryClick(item)}
                 className={`cursor-pointer pb-1 ${
-                  activeCategory === item
+                  activeCategory === item && location.pathname === "/"
                     ? "text-green-600"
                     : "text-gray-700 hover:text-green-600"
                 }`}
@@ -88,7 +101,10 @@ export default function Navbar() {
         </div>
 
         {/* Center Logo */}
-        <div className="flex-1 flex justify-center">
+        <div
+          className="flex-1 flex justify-center cursor-pointer"
+          onClick={() => navigate("/")}
+        >
           <img src={logo} alt="Logo" className="h-10 w-auto" />
         </div>
 
@@ -131,9 +147,11 @@ export default function Navbar() {
               className="relative"
             >
               <ShoppingCart size={26} className="text-gray-800" />
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                3
-              </span>
+              {items.length > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {items.length}
+                </span>
+              )}
             </button>
 
             {isCartOpen && (
@@ -155,7 +173,7 @@ export default function Navbar() {
             <div
               key={item}
               onClick={() => {
-                setActiveCategory(item);
+                handleCategoryClick(item);
                 setIsOpen(false);
               }}
               className={`uppercase font-semibold cursor-pointer transition-colors ${
