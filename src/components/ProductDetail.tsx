@@ -1,4 +1,3 @@
-// src/components/ProductDetail.tsx
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
@@ -8,13 +7,14 @@ import products from "../data/products";
 export default function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { addToCart } = useCart();
+  const { items, addToCart, setIsCartOpen } = useCart();
   const { selectedProduct, clearSelectedProduct } = useProduct();
 
   const [selectedSize, setSelectedSize] = useState("M");
   const [selectedColor, setSelectedColor] = useState("Green");
   const [mainImage, setMainImage] = useState<string>("");
 
+  // Find product either from context or dataset
   const product =
     selectedProduct ||
     Object.values(products)
@@ -33,27 +33,38 @@ export default function ProductDetail() {
     { name: "Grey", code: "#808080" },
   ];
 
+  // ✅ Check if this product is already in the cart
+  const isInCart = items.some((item) => item.id === product?.id);
+
+  // ✅ Add to cart handler
   const handleAddToCart = () => {
-    if (!product) return;
+    if (!product || isInCart) return;
     addToCart({ ...product, quantity: 1 });
-    navigate("/cart");
+
+    // Briefly show cart overlay
+    setIsCartOpen(true);
+    setTimeout(() => setIsCartOpen(false), 2000);
   };
 
+  // ✅ Navigate back
   const handleGoBack = () => {
     clearSelectedProduct();
-    navigate("/"); // Always go back to product list
+    navigate("/");
+  };
+
+  // ✅ Navigate to cart if already added
+  const handleGoToCart = () => {
+    navigate("/cart");
   };
 
   if (!product) return null;
 
-  // Generate fallback thumbnails if product.images doesn't exist
   const thumbnails = product.images?.length
     ? product.images
     : [product.image, product.image, product.image];
 
   return (
     <section className="p-8 flex flex-col md:flex-row items-start gap-12 relative">
-      {/* Back button */}
       <button
         onClick={handleGoBack}
         className="mb-4 text-green-600 hover:underline absolute top-6 left-6"
@@ -61,9 +72,9 @@ export default function ProductDetail() {
         ← Back
       </button>
 
-      {/* Product Images Section */}
+      {/* Images Section */}
       <div className="flex w-full md:w-1/2 gap-6">
-        {/* Thumbnails - vertical */}
+        {/* Thumbnails */}
         <div className="hidden md:flex flex-col gap-4">
           {thumbnails.map((img, index) => (
             <img
@@ -90,10 +101,11 @@ export default function ProductDetail() {
         </div>
       </div>
 
-      {/* Product Info Section */}
+      {/* Info Section */}
       <div className="w-full md:w-1/2">
         <h1 className="text-2xl leading-tight font-bold">{product.name}</h1>
 
+        {/* Sizes */}
         <div className="mt-6 mb-6">
           <h3 className="font-semibold uppercase mb-2">Size:</h3>
           <div className="flex space-x-3">
@@ -113,6 +125,7 @@ export default function ProductDetail() {
           </div>
         </div>
 
+        {/* Colors */}
         <div className="mb-6">
           <h3 className="font-semibold uppercase mb-2">Color:</h3>
           <div className="flex space-x-3">
@@ -134,15 +147,26 @@ export default function ProductDetail() {
           </div>
         </div>
 
+        {/* Price */}
         <h3 className="font-semibold uppercase mb-2">Price:</h3>
         <p className="text-lg font-medium mb-6">${product.price.toFixed(2)}</p>
 
-        <button
-          onClick={handleAddToCart}
-          className="bg-green-600 text-white px-8 py-3 rounded-md hover:bg-green-700 transition"
-        >
-          ADD TO CART
-        </button>
+        {/* ✅ Button Changes When In Cart */}
+        {isInCart ? (
+          <button
+            onClick={handleGoToCart}
+            className="bg-gray-400 text-white px-8 py-3 rounded-md font-semibold cursor-pointer hover:bg-gray-500 transition"
+          >
+            IN CART
+          </button>
+        ) : (
+          <button
+            onClick={handleAddToCart}
+            className="bg-green-600 text-white px-8 py-3 rounded-md font-semibold cursor-pointer hover:bg-green-700 transition"
+          >
+            ADD TO CART
+          </button>
+        )}
 
         <p className="mt-8 text-gray-700 leading-relaxed">
           Find stunning women’s cocktail dresses and party dresses. Stand out in lace

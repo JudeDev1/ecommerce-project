@@ -20,7 +20,7 @@ export default function App() {
               <main className="pt-16">
                 <Routes>
                   <Route path="/" element={<ProductList />} />
-                  <Route path="/product/:id" element={<ProductDetail />} />
+                  <Route path="/products/:id" element={<ProductDetail />} />
                   <Route path="/cart" element={<CartPage />} />
                 </Routes>
               </main>

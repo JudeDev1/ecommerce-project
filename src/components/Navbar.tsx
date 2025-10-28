@@ -23,7 +23,7 @@ export default function Navbar() {
 
   const navItems = ["WOMEN", "MEN", "KIDS"];
 
-  // Handle active underline
+  // Handle underline for active category
   useEffect(() => {
     if (window.innerWidth < 768) return;
     const activeIndex = navItems.indexOf(activeCategory);
@@ -34,7 +34,7 @@ export default function Navbar() {
         width: activeEl.offsetWidth,
       });
     } else {
-      setUnderlineStyle({ left: 0, width: 0 }); // hide underline when not on home
+      setUnderlineStyle({ left: 0, width: 0 });
     }
   }, [activeCategory, location.pathname]);
 
@@ -49,13 +49,11 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Handle category navigation
   const handleCategoryClick = (category: string) => {
     setActiveCategory(category);
-    navigate("/"); // go back to home so products show
+    navigate("/");
   };
 
-  // Handle View Bag
   const handleViewBag = () => {
     navigate("/cart");
     setIsCartOpen(false);
@@ -71,7 +69,7 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Desktop Nav */}
+        {/* Desktop Navigation */}
         <div className="hidden md:flex flex-col relative">
           <div className="flex space-x-8 text-sm font-semibold tracking-wide uppercase relative">
             {navItems.map((item, index) => (
@@ -100,7 +98,7 @@ export default function Navbar() {
           ></div>
         </div>
 
-        {/* Center Logo */}
+        {/* Logo */}
         <div
           className="flex-1 flex justify-center cursor-pointer"
           onClick={() => navigate("/")}
@@ -108,9 +106,9 @@ export default function Navbar() {
           <img src={logo} alt="Logo" className="h-10 w-auto" />
         </div>
 
-        {/* Currency & Cart */}
+        {/* Currency and Cart */}
         <div className="flex items-center space-x-4 relative">
-          {/* Currency dropdown */}
+          {/* Currency Dropdown */}
           <div
             className="relative cursor-pointer"
             onClick={() => setIsCurrencyOpen(!isCurrencyOpen)}
@@ -141,18 +139,23 @@ export default function Navbar() {
           </div>
 
           {/* Cart Icon + Overlay */}
-          <div className="relative" ref={cartRef}>
-            <button
-              onClick={() => setIsCartOpen(!isCartOpen)}
-              className="relative"
-            >
-              <ShoppingCart size={26} className="text-gray-800" />
+          <div
+            className="relative group cursor-pointer select-none"
+            ref={cartRef}
+            onMouseEnter={() => setIsCartOpen(true)}
+            onMouseLeave={() => setIsCartOpen(false)}
+          >
+            <div className="relative transition-transform duration-200 group-hover:scale-105">
+              <ShoppingCart
+                size={26}
+                className="text-gray-800 cursor-pointer"
+              />
               {items.length > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   {items.length}
                 </span>
               )}
-            </button>
+            </div>
 
             {isCartOpen && (
               <div className="absolute right-0">
@@ -166,7 +169,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Nav */}
       {isOpen && (
         <div className="md:hidden mt-4 flex flex-col items-center space-y-3">
           {navItems.map((item) => (

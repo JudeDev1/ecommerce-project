@@ -1,4 +1,3 @@
-// src/context/CartContext.tsx
 import { createContext, useContext, useState, ReactNode } from "react";
 
 interface CartItem {
@@ -15,12 +14,15 @@ interface CartContextType {
   removeFromCart: (id: number) => void;
   clearCart: () => void;
   total: number;
+  isCartOpen: boolean;
+  setIsCartOpen: (open: boolean) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   const addToCart = (newItem: CartItem) => {
     setItems((prev) => {
@@ -46,7 +48,15 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <CartContext.Provider
-      value={{ items, addToCart, removeFromCart, clearCart, total }}
+      value={{
+        items,
+        addToCart,
+        removeFromCart,
+        clearCart,
+        total,
+        isCartOpen,
+        setIsCartOpen,
+      }}
     >
       {children}
     </CartContext.Provider>

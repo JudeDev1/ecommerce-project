@@ -20,17 +20,34 @@ export default function ProductList() {
           items.map((product) => (
             <div
               key={product.id}
-              className="rounded-lg shadow hover:shadow-lg transition p-4 bg-white cursor-pointer"
+              className={`relative rounded-lg shadow hover:shadow-lg transition p-4 bg-white ${
+                product.inStock ? "cursor-pointer" : "cursor-not-allowed"
+              }`}
               onClick={() => {
-                setSelectedProduct(product);
-                navigate(`/product/${product.id}`);
+                if (product.inStock) {
+                  setSelectedProduct(product);
+                  navigate(`/products/${product.id}`);
+                }
               }}
             >
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-64 object-cover rounded"
-              />
+              <div className="relative">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className={`w-full h-64 object-cover rounded ${
+                    !product.inStock ? "opacity-60 grayscale" : ""
+                  }`}
+                />
+
+                {!product.inStock && (
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded">
+                    <span className="text-white text-lg font-semibold">
+                      OUT OF STOCK
+                    </span>
+                  </div>
+                )}
+              </div>
+
               <h3 className="mt-3 text-lg font-light">{product.name}</h3>
               <p className="font-medium mt-1">${product.price.toFixed(2)}</p>
             </div>
