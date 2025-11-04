@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+// src/context/CartContext.tsx
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 interface CartItem {
   id: number;
@@ -12,6 +13,8 @@ interface CartContextType {
   items: CartItem[];
   addToCart: (item: CartItem) => void;
   removeFromCart: (id: number) => void;
+  increaseQuantity: (id: number) => void;
+  decreaseQuantity: (id: number) => void;
   clearCart: () => void;
   total: number;
   isCartOpen: boolean;
@@ -21,8 +24,18 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const [items, setItems] = useState<CartItem[]>(() => {
+    // Load from localStorage
+    const saved = localStorage.getItem("cartItems");
+    return saved ? JSON.parse(saved) : [];
+  });
+
   const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // Save cart items to localStorage
+  useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(items));
+  }, [items]);
 
   const addToCart = (newItem: CartItem) => {
     setItems((prev) => {
@@ -42,6 +55,24 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setItems((prev) => prev.filter((i) => i.id !== id));
   };
 
+  const increaseQuantity = (id: number) => {
+    setItems((prev) =>
+      prev.map((i) => (i.id === id ? { ...i, quantity: i.quantity + 1 } : i))
+    );
+  };
+
+  const decreaseQuantity = (id: number) => {
+    setItems((prev) =>
+      prev
+        .map((i) =>
+          i.id === id && i.quantity > 1
+            ? { ...i, quantity: i.quantity - 1 }
+            : i
+        )
+        .filter((i) => i.quantity > 0)
+    );
+  };
+
   const clearCart = () => setItems([]);
 
   const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
@@ -52,6 +83,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         items,
         addToCart,
         removeFromCart,
+        increaseQuantity,
+        decreaseQuantity,
         clearCart,
         total,
         isCartOpen,

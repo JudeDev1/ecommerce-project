@@ -3,7 +3,13 @@ import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 
 export default function CartPage() {
-  const { items, increaseQuantity, decreaseQuantity, clearCart } = useCart();
+  const {
+    items,
+    increaseQuantity,
+    decreaseQuantity,
+    removeFromCart,
+    clearCart,
+  } = useCart();
   const navigate = useNavigate();
 
   const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
@@ -14,6 +20,7 @@ export default function CartPage() {
     <section className="p-8 flex flex-col gap-10">
       <h1 className="text-3xl font-bold mb-4 uppercase">Cart</h1>
 
+      {/* Empty Cart Message */}
       {items.length === 0 ? (
         <p className="text-lg text-gray-600">Your cart is empty.</p>
       ) : (
@@ -24,9 +31,18 @@ export default function CartPage() {
           >
             {/* Left Side */}
             <div className="flex-1">
-              <h2 className="text-xl font-bold leading-tight">
-                {item.name.split(" ")[0]}
-              </h2>
+              <div className="flex items-center gap-3">
+                <h2 className="text-xl font-bold leading-tight">
+                  {item.name.split(" ")[0]}
+                </h2>
+                <button
+                  onClick={() => removeFromCart(item.id)}
+                  className="text-red-500 text-sm font-semibold hover:underline"
+                >
+                  Remove
+                </button>
+              </div>
+
               <p className="text-lg font-light">
                 {item.name.split(" ").slice(1).join(" ")}
               </p>
@@ -129,12 +145,15 @@ export default function CartPage() {
         >
           ← Continue Shopping
         </button>
-        <button
-          onClick={clearCart}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-        >
-          Clear Cart
-        </button>
+
+        {items.length > 0 && (
+          <button
+            onClick={clearCart}
+            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          >
+            Clear Cart
+          </button>
+        )}
       </div>
     </section>
   );

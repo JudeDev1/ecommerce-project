@@ -13,10 +13,10 @@ export default function App() {
         <ProductProvider>
           <CartProvider>
             <div className="min-h-screen bg-gray-50 text-gray-900">
-              {/* ✅ Persistent Navbar */}
+              {/* Persistent Navbar */}
               <Navbar />
 
-              {/* ✅ Main Routes */}
+              {/* Main Routes */}
               <main className="pt-16">
                 <Routes>
                   <Route path="/" element={<ProductList />} />

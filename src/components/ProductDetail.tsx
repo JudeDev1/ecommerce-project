@@ -33,10 +33,10 @@ export default function ProductDetail() {
     { name: "Grey", code: "#808080" },
   ];
 
-  // ✅ Check if this product is already in the cart
+  // Check if this product is already in the cart
   const isInCart = items.some((item) => item.id === product?.id);
 
-  // ✅ Add to cart handler
+  // Add to cart handler
   const handleAddToCart = () => {
     if (!product || isInCart) return;
     addToCart({ ...product, quantity: 1 });
@@ -46,13 +46,13 @@ export default function ProductDetail() {
     setTimeout(() => setIsCartOpen(false), 2000);
   };
 
-  // ✅ Navigate back
+  // Navigate back
   const handleGoBack = () => {
     clearSelectedProduct();
     navigate("/");
   };
 
-  // ✅ Navigate to cart if already added
+  // Navigate to cart if already added
   const handleGoToCart = () => {
     navigate("/cart");
   };
@@ -151,7 +151,7 @@ export default function ProductDetail() {
         <h3 className="font-semibold uppercase mb-2">Price:</h3>
         <p className="text-lg font-medium mb-6">${product.price.toFixed(2)}</p>
 
-        {/* ✅ Button Changes When In Cart */}
+        {/* Button Changes When In Cart */}
         {isInCart ? (
           <button
             onClick={handleGoToCart}
