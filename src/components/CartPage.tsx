@@ -82,8 +82,8 @@ export default function CartPage() {
                           color === "Gray"
                             ? "#808080"
                             : color === "Black"
-                            ? "#000000"
-                            : "#228B22",
+                              ? "#000000"
+                              : "#228B22",
                       }}
                     ></div>
                   ))}

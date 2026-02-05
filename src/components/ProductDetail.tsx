@@ -1,3 +1,4 @@
+// src/components/ProductDetail.tsx
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
@@ -10,8 +11,8 @@ export default function ProductDetail() {
   const { items, addToCart, setIsCartOpen } = useCart();
   const { selectedProduct, clearSelectedProduct } = useProduct();
 
-  const [selectedSize, setSelectedSize] = useState("M");
-  const [selectedColor, setSelectedColor] = useState("Green");
+  const [selectedSize, setSelectedSize] = useState<string>("M");
+  const [selectedColor, setSelectedColor] = useState<string>("Green");
   const [mainImage, setMainImage] = useState<string>("");
 
   // Find product either from context or dataset
@@ -26,15 +27,15 @@ export default function ProductDetail() {
     else setMainImage(product.image || "");
   }, [product, navigate]);
 
-  const sizes = ["XS", "S", "M", "L"];
-  const colors = [
+  const sizes: string[] = ["XS", "S", "M", "L"];
+  const colors: { name: string; code: string }[] = [
     { name: "Green", code: "#4CAF50" },
     { name: "Black", code: "#000000" },
     { name: "Grey", code: "#808080" },
   ];
 
   // Check if this product is already in the cart
-  const isInCart = items.some((item) => item.id === product?.id);
+  const isInCart = product ? items.some((item) => item.id === product.id) : false;
 
   // Add to cart handler
   const handleAddToCart = () => {
@@ -59,7 +60,7 @@ export default function ProductDetail() {
 
   if (!product) return null;
 
-  const thumbnails = product.images?.length
+  const thumbnails: string[] = product.images?.length
     ? product.images
     : [product.image, product.image, product.image];
 
@@ -76,7 +77,7 @@ export default function ProductDetail() {
       <div className="flex w-full md:w-1/2 gap-6">
         {/* Thumbnails */}
         <div className="hidden md:flex flex-col gap-4">
-          {thumbnails.map((img, index) => (
+          {thumbnails.map((img: string, index: number) => (
             <img
               key={index}
               src={img}
@@ -109,7 +110,7 @@ export default function ProductDetail() {
         <div className="mt-6 mb-6">
           <h3 className="font-semibold uppercase mb-2">Size:</h3>
           <div className="flex space-x-3">
-            {sizes.map((size) => (
+            {sizes.map((size: string) => (
               <button
                 key={size}
                 onClick={() => setSelectedSize(size)}
@@ -129,7 +130,7 @@ export default function ProductDetail() {
         <div className="mb-6">
           <h3 className="font-semibold uppercase mb-2">Color:</h3>
           <div className="flex space-x-3">
-            {colors.map((color) => (
+            {colors.map((color: { name: string; code: string }) => (
               <div
                 key={color.name}
                 onClick={() => setSelectedColor(color.name)}
@@ -169,8 +170,9 @@ export default function ProductDetail() {
         )}
 
         <p className="mt-8 text-gray-700 leading-relaxed">
-          Find stunning women’s cocktail dresses and party dresses. Stand out in lace
-          and metallic cocktail dresses and party dresses from all your favourite brands.
+          Find stunning women’s cocktail dresses and party dresses. Stand out in
+          lace and metallic cocktail dresses and party dresses from all your
+          favourite brands.
         </p>
       </div>
     </section>

@@ -7,6 +7,12 @@ import { useCart } from "../context/CartContext";
 import CartOverlay from "./CartOverlay";
 import { useNavigate, useLocation } from "react-router-dom";
 
+// Fixed: Added props interface for CartOverlay
+interface CartOverlayProps {
+  onClose: () => void;
+  onViewBag: () => void;
+}
+
 export default function Navbar() {
   const { activeCategory, setActiveCategory } = useProduct();
   const { items } = useCart();
@@ -16,6 +22,7 @@ export default function Navbar() {
   const [currency, setCurrency] = useState({ code: "USD", symbol: "$" });
   const [underlineStyle, setUnderlineStyle] = useState({ left: 0, width: 0 });
 
+  // Fixed: navRefs callback now returns void
   const navRefs = useRef<(HTMLDivElement | null)[]>([]);
   const cartRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
@@ -26,8 +33,10 @@ export default function Navbar() {
   // Handle underline for active category
   useEffect(() => {
     if (window.innerWidth < 768) return;
+
     const activeIndex = navItems.indexOf(activeCategory);
     const activeEl = navRefs.current[activeIndex];
+
     if (activeEl && location.pathname === "/") {
       setUnderlineStyle({
         left: activeEl.offsetLeft,
@@ -45,6 +54,7 @@ export default function Navbar() {
         setIsCartOpen(false);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -75,7 +85,9 @@ export default function Navbar() {
             {navItems.map((item, index) => (
               <div
                 key={item}
-                ref={(el) => (navRefs.current[index] = el)}
+                ref={(el: HTMLDivElement | null) => {
+                  navRefs.current[index] = el; // ✅ void callback
+                }}
                 onClick={() => handleCategoryClick(item)}
                 className={`cursor-pointer pb-1 ${
                   activeCategory === item && location.pathname === "/"
@@ -120,20 +132,22 @@ export default function Navbar() {
 
             {isCurrencyOpen && (
               <div className="absolute right-0 mt-2 bg-white border border-gray-200 rounded shadow-lg w-28 text-sm z-30">
-                {[{ code: "USD", symbol: "$" }, { code: "EUR", symbol: "€" }, { code: "GBP", symbol: "£" }].map(
-                  (cur) => (
-                    <div
-                      key={cur.code}
-                      onClick={() => {
-                        setCurrency(cur);
-                        setIsCurrencyOpen(false);
-                      }}
-                      className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-                    >
-                      {cur.code} ({cur.symbol})
-                    </div>
-                  )
-                )}
+                {[
+                  { code: "USD", symbol: "$" },
+                  { code: "EUR", symbol: "€" },
+                  { code: "GBP", symbol: "£" },
+                ].map((cur) => (
+                  <div
+                    key={cur.code}
+                    onClick={() => {
+                      setCurrency(cur);
+                      setIsCurrencyOpen(false);
+                    }}
+                    className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                  >
+                    {cur.code} ({cur.symbol})
+                  </div>
+                ))}
               </div>
             )}
           </div>

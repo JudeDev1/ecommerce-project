@@ -1,5 +1,5 @@
 // src/context/CartContext.tsx
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 
 interface CartItem {
   id: number;
@@ -25,14 +25,12 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>(() => {
-    // Load from localStorage
     const saved = localStorage.getItem("cartItems");
     return saved ? JSON.parse(saved) : [];
   });
 
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  // Save cart items to localStorage
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(items));
   }, [items]);
@@ -65,9 +63,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setItems((prev) =>
       prev
         .map((i) =>
-          i.id === id && i.quantity > 1
-            ? { ...i, quantity: i.quantity - 1 }
-            : i
+          i.id === id && i.quantity > 1 ? { ...i, quantity: i.quantity - 1 } : i
         )
         .filter((i) => i.quantity > 0)
     );

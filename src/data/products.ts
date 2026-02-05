@@ -23,33 +23,137 @@ import kid6 from "../assets/kids6.jpg";
 
 const products = {
   WOMEN: [
-    { id: 1, name: "Apollo Running Short", price: 50.0, image: woman1, inStock: true },
-    { id: 2, name: "Apollo Running Short", price: 50.0, image: woman2, inStock: true },
-    { id: 3, name: "Apollo Running Short", price: 50.0, image: woman3, inStock: false }, // Out of Stock
-    { id: 4, name: "Apollo Running Short", price: 50.0, image: woman4, inStock: true },
-    { id: 5, name: "Apollo Running Short", price: 50.0, image: woman5, inStock: true },
-    { id: 6, name: "Apollo Running Short", price: 50.0, image: woman6, inStock: true },
+    {
+      id: 1,
+      name: "Apollo Running Short",
+      price: 50.0,
+      image: woman1,
+      inStock: true,
+    },
+    {
+      id: 2,
+      name: "Apollo Running Short",
+      price: 50.0,
+      image: woman2,
+      inStock: true,
+    },
+    {
+      id: 3,
+      name: "Apollo Running Short",
+      price: 50.0,
+      image: woman3,
+      inStock: false,
+    }, // Out of Stock
+    {
+      id: 4,
+      name: "Apollo Running Short",
+      price: 50.0,
+      image: woman4,
+      inStock: true,
+    },
+    {
+      id: 5,
+      name: "Apollo Running Short",
+      price: 50.0,
+      image: woman5,
+      inStock: true,
+    },
+    {
+      id: 6,
+      name: "Apollo Running Short",
+      price: 50.0,
+      image: woman6,
+      inStock: true,
+    },
   ],
   MEN: [
-    { id: 1, name: "Atlas Training Tee", price: 60.0, image: man1, inStock: true },
-    { id: 2, name: "Atlas Training Tee", price: 60.0, image: man2, inStock: true },
-    { id: 3, name: "Atlas Training Tee", price: 60.0, image: man3, inStock: true },
-    { id: 4, name: "Atlas Training Tee", price: 60.0, image: man4, inStock: true },
-    { id: 5, name: "Atlas Training Tee", price: 60.0, image: man5, inStock: true },
-    { id: 6, name: "Atlas Training Tee", price: 60.0, image: man6, inStock: true },
+    {
+      id: 1,
+      name: "Atlas Training Tee",
+      price: 60.0,
+      image: man1,
+      inStock: true,
+    },
+    {
+      id: 2,
+      name: "Atlas Training Tee",
+      price: 60.0,
+      image: man2,
+      inStock: true,
+    },
+    {
+      id: 3,
+      name: "Atlas Training Tee",
+      price: 60.0,
+      image: man3,
+      inStock: true,
+    },
+    {
+      id: 4,
+      name: "Atlas Training Tee",
+      price: 60.0,
+      image: man4,
+      inStock: true,
+    },
+    {
+      id: 5,
+      name: "Atlas Training Tee",
+      price: 60.0,
+      image: man5,
+      inStock: true,
+    },
+    {
+      id: 6,
+      name: "Atlas Training Tee",
+      price: 60.0,
+      image: man6,
+      inStock: true,
+    },
   ],
   KIDS: [
-    { id: 1, name: "Zephyr Kiddies Wear", price: 45.0, image: kid1, inStock: true },
-    { id: 2, name: "Zephyr Kiddies Wear", price: 45.0, image: kid2, inStock: true },
-    { id: 3, name: "Zephyr Kiddies Wear", price: 45.0, image: kid3, inStock: true },
-    { id: 4, name: "Zephyr Kiddies Wear", price: 45.0, image: kid4, inStock: true },
-    { id: 5, name: "Zephyr Kiddies Wear", price: 45.0, image: kid5, inStock: true },
-    { id: 6, name: "Zephyr Kiddies Wear", price: 45.0, image: kid6, inStock: true },
+    {
+      id: 1,
+      name: "Zephyr Kiddies Wear",
+      price: 45.0,
+      image: kid1,
+      inStock: true,
+    },
+    {
+      id: 2,
+      name: "Zephyr Kiddies Wear",
+      price: 45.0,
+      image: kid2,
+      inStock: true,
+    },
+    {
+      id: 3,
+      name: "Zephyr Kiddies Wear",
+      price: 45.0,
+      image: kid3,
+      inStock: true,
+    },
+    {
+      id: 4,
+      name: "Zephyr Kiddies Wear",
+      price: 45.0,
+      image: kid4,
+      inStock: true,
+    },
+    {
+      id: 5,
+      name: "Zephyr Kiddies Wear",
+      price: 45.0,
+      image: kid5,
+      inStock: true,
+    },
+    {
+      id: 6,
+      name: "Zephyr Kiddies Wear",
+      price: 45.0,
+      image: kid6,
+      inStock: true,
+    },
   ],
 };
 
 export default products;
-
-
-
-

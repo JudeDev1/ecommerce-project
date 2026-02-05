@@ -3,11 +3,23 @@ import { useNavigate } from "react-router-dom";
 import products from "../data/products";
 import { useProduct } from "../context/ProductContext";
 
+// Define the Product type
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+  inStock: boolean;
+}
+
+type Category = "WOMEN" | "MEN" | "KIDS";
+
 export default function ProductList() {
   const { activeCategory, setSelectedProduct } = useProduct();
   const navigate = useNavigate();
 
-  const items = products[activeCategory] || [];
+  // Type assertion for safe indexing
+  const items: Product[] = products[activeCategory as Category] || [];
 
   return (
     <section className="p-8">
@@ -17,7 +29,7 @@ export default function ProductList() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {items.length > 0 ? (
-          items.map((product) => (
+          items.map((product: Product) => (
             <div
               key={product.id}
               className={`relative rounded-lg shadow hover:shadow-lg transition p-4 bg-white ${
