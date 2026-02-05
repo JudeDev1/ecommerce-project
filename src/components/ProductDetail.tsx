@@ -5,6 +5,15 @@ import { useCart } from "../context/CartContext";
 import { useProduct } from "../context/ProductContext";
 import products from "../data/products";
 
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+  images?: string[];
+  inStock?: boolean;
+}
+
 export default function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -15,12 +24,11 @@ export default function ProductDetail() {
   const [selectedColor, setSelectedColor] = useState<string>("Green");
   const [mainImage, setMainImage] = useState<string>("");
 
-  // Find product either from context or dataset
-  const product =
+  const product: Product | undefined =
     selectedProduct ||
     Object.values(products)
       .flat()
-      .find((p) => p.id === Number(id));
+      .find((p: any) => p.id === Number(id));
 
   useEffect(() => {
     if (!product) navigate("/");
@@ -34,26 +42,20 @@ export default function ProductDetail() {
     { name: "Grey", code: "#808080" },
   ];
 
-  // Check if this product is already in the cart
   const isInCart = product ? items.some((item) => item.id === product.id) : false;
 
-  // Add to cart handler
   const handleAddToCart = () => {
     if (!product || isInCart) return;
     addToCart({ ...product, quantity: 1 });
-
-    // Briefly show cart overlay
     setIsCartOpen(true);
     setTimeout(() => setIsCartOpen(false), 2000);
   };
 
-  // Navigate back
   const handleGoBack = () => {
     clearSelectedProduct();
     navigate("/");
   };
 
-  // Navigate to cart if already added
   const handleGoToCart = () => {
     navigate("/cart");
   };
@@ -73,9 +75,7 @@ export default function ProductDetail() {
         ← Back
       </button>
 
-      {/* Images Section */}
       <div className="flex w-full md:w-1/2 gap-6">
-        {/* Thumbnails */}
         <div className="hidden md:flex flex-col gap-4">
           {thumbnails.map((img: string, index: number) => (
             <img
@@ -92,7 +92,6 @@ export default function ProductDetail() {
           ))}
         </div>
 
-        {/* Main Image */}
         <div className="flex-1 flex justify-center">
           <img
             src={mainImage}
@@ -102,11 +101,9 @@ export default function ProductDetail() {
         </div>
       </div>
 
-      {/* Info Section */}
       <div className="w-full md:w-1/2">
         <h1 className="text-2xl leading-tight font-bold">{product.name}</h1>
 
-        {/* Sizes */}
         <div className="mt-6 mb-6">
           <h3 className="font-semibold uppercase mb-2">Size:</h3>
           <div className="flex space-x-3">
@@ -126,7 +123,6 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        {/* Colors */}
         <div className="mb-6">
           <h3 className="font-semibold uppercase mb-2">Color:</h3>
           <div className="flex space-x-3">
@@ -139,20 +135,15 @@ export default function ProductDetail() {
                     ? "border-green-600 scale-110"
                     : "border-gray-300 hover:scale-105"
                 }`}
-                style={{
-                  backgroundColor: color.code,
-                  borderRadius: "0.25rem",
-                }}
+                style={{ backgroundColor: color.code, borderRadius: "0.25rem" }}
               ></div>
             ))}
           </div>
         </div>
 
-        {/* Price */}
         <h3 className="font-semibold uppercase mb-2">Price:</h3>
         <p className="text-lg font-medium mb-6">${product.price.toFixed(2)}</p>
 
-        {/* Button Changes When In Cart */}
         {isInCart ? (
           <button
             onClick={handleGoToCart}
