@@ -7,11 +7,12 @@ import { useCart } from "../context/CartContext";
 import CartOverlay from "./CartOverlay";
 import { useNavigate, useLocation } from "react-router-dom";
 
-// Fixed: Added props interface for CartOverlay
+/*Fixed: Added props interface for CartOverlay
 interface CartOverlayProps {
   onClose: () => void;
   onViewBag: () => void;
 }
+*/
 
 export default function Navbar() {
   const { activeCategory, setActiveCategory } = useProduct();
@@ -30,7 +31,7 @@ export default function Navbar() {
 
   const navItems = ["WOMEN", "MEN", "KIDS"];
 
-  // Handle underline for active category
+  // 
   useEffect(() => {
     if (window.innerWidth < 768) return;
 
@@ -47,7 +48,7 @@ export default function Navbar() {
     }
   }, [activeCategory, location.pathname]);
 
-  // Close cart overlay when clicking outside
+  // 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (cartRef.current && !cartRef.current.contains(e.target as Node)) {
@@ -64,10 +65,10 @@ export default function Navbar() {
     navigate("/");
   };
 
-  const handleViewBag = () => {
+  /*const handleViewBag = () => {
     navigate("/cart");
     setIsCartOpen(false);
-  };
+  };*/
 
   return (
     <nav className="w-full bg-white shadow-md p-4 relative z-40">
@@ -86,7 +87,7 @@ export default function Navbar() {
               <div
                 key={item}
                 ref={(el: HTMLDivElement | null) => {
-                  navRefs.current[index] = el; // ✅ void callback
+                  navRefs.current[index] = el; //
                 }}
                 onClick={() => handleCategoryClick(item)}
                 className={`cursor-pointer pb-1 ${
@@ -172,12 +173,9 @@ export default function Navbar() {
             </div>
 
             {isCartOpen && (
-              <div className="absolute right-0">
-                <CartOverlay
-                  onClose={() => setIsCartOpen(false)}
-                  onViewBag={handleViewBag}
-                />
-              </div>
+                <div className="absolute right-0">
+                  <CartOverlay />
+                </div>
             )}
           </div>
         </div>
